@@ -35,12 +35,11 @@ class User extends Authenticatable
 
     public function checkRoles($roles)
     {
-        (!is_array($roles) && $roles = [$roles]);
-
-        if (!$this->hasAnyRole($roles)) {
-            auth()->logout();
-            abort(404);
+        if (is_array($roles)) {
+            return $this->hasAnyRole($roles) || redirect()->action('PostController@all');
         }
+
+        return $this->hasRole($roles) || redirect()->action('PostController@all');
     }
 
     public function hasAnyRole($roles) : bool

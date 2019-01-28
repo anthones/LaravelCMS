@@ -19,7 +19,7 @@ class PostTableSeeder extends Seeder
         $post->save();
 
         $post = new Post;
-        $post->user_id = 2;
+        $post->user_id = 1;
         $post->title = "My second title!";
         $post->body = "This is sample text for the body of my second post. It is also completely random yet legible so that anyone can understand it.";
         $post->save();

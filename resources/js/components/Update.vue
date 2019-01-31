@@ -19,7 +19,7 @@
           v-if="errors.body"
           class="label label-danger"
         >
-          {{ errors.body[0] }}
+          {{ errors.body[0] }}, status {{ error.response.status }}
         </span>
       </div>
 
@@ -43,6 +43,17 @@
           :config="config"
           v-model="model"
         ></froala>
+      </div>
+
+      <div class="custom-file mb-3">
+        <input
+          type="file"
+          ref="image"
+          name="image"
+          class="custom-file-input"
+          id="image"
+        >
+        <label class="custom-file-label">Choose file...</label>
       </div>
 
       <button
@@ -79,16 +90,20 @@ export default {
           }
         }
       },
-      model: "Edit your config here!"
+      model: "Edit Your Content Here!",
+      imageKey: 0
     };
   },
   methods: {
     update() {
-      let title = this.$refs.title.value;
-      let body = this.$refs.body.value;
+      const formData = new FormData();
+      formData.append("title", this.$refs.title.value);
+      formData.append("body", this.$refs.body.value);
+      formData.append("image", this.$refs.image.files[0]);
+      formData.append("_method", "PUT");
 
       axios
-        .put("/api/posts/" + this.postId, { title, body })
+        .post("/api/posts/" + this.postId, formData)
         .then(response => {
           this.successful = true;
           this.error = false;
@@ -103,6 +118,9 @@ export default {
             }
           }
         });
+    },
+    fullImagePath(localPath) {
+      return "/uploads/posts/" + localPath;
     },
     getPost() {
       axios.get("/api/posts/" + this.postId).then(response => {

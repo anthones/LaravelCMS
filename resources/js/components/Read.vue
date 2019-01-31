@@ -6,6 +6,7 @@
       :key="post"
     >
       {{ post.title }}
+      <img :src='fullImagePath(post.image)'>
       <router-link :to="{ name: 'update', params: { postId : post.id } }">
         <button
           type="button"
@@ -43,6 +44,22 @@
   </div>
 </template>
 
+<style scoped>
+#posts > p > img {
+  margin-left: 50px;
+  width: 100px;
+  height: auto;
+}
+
+#posts > p {
+  font: 1.6em Arial;
+  color: #aaa;
+}
+/* #posts > button {
+  justify-content: center;
+} */
+</style>
+
 <script>
 export default {
   mounted() {
@@ -62,6 +79,9 @@ export default {
         this.prev = response.data.links.prev;
         this.next = response.data.links.next;
       });
+    },
+    fullImagePath(localPath) {
+      return "/uploads/posts/" + localPath;
     },
     deletePost(id) {
       axios.delete("/api/posts/" + id).then(response => this.getPosts());

@@ -58,7 +58,7 @@ class PostController extends Controller
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $name = str_slug($request->title) . '.' . $image->getClientOriginalExtension();
-            $destinationPath = public_path('/uploads/posts');
+            $destinationPath = public_path('/uploads/posts/');
             $imagePath = $destinationPath . "/" . $name;
             $image->move($destinationPath, $name);
             $post->image = $name;
@@ -106,8 +106,17 @@ class PostController extends Controller
         $this->validate($request, [
             'title' => 'required',
             'body' => 'required',
+            'image' => 'required|mimes:jpeg,png,jpg,gif,svg'
         ]);
-        $post->update($request->only(['title', 'body']));
+
+        $image = $request->file('image');
+        $imageName = $image->getClientOriginalName();
+        $destinationPath = public_path('/uploads/posts');
+        $imagePath = $destinationPath . "/" . $imageName;
+        $image->move($destinationPath, $imageName);
+        $post->image = $imageName;
+
+        $post->update($request->only(['title', 'body', $imageName]));
 
         return new PostResource($post);
     }

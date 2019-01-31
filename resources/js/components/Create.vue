@@ -40,14 +40,14 @@
       </div>
 
       <div class="form-group">
-        <textarea
+        <froala
           class="form-control"
           ref="body"
           id="body"
-          placeholder="Enter a body"
-          rows="8"
-          required
-        ></textarea>
+          :tag="'textarea'"
+          :config="config"
+          v-model="model"
+        ></froala>
       </div>
 
       <div class="custom-file mb-3">
@@ -85,7 +85,15 @@ export default {
     return {
       error: false,
       successful: false,
-      errors: []
+      errors: [],
+      config: {
+        events: {
+          "froalaEditor.initialized": function() {
+            console.log("initialized");
+          }
+        }
+      },
+      model: "Edit your config here!"
     };
   },
   methods: {
